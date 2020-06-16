@@ -24,6 +24,7 @@ import android.annotation.TargetApi
 import android.net.Uri
 import android.os.Parcelable
 import android.util.Base64
+import android.util.Log
 import android.util.LongSparseArray
 import androidx.core.net.toUri
 import androidx.room.*
@@ -193,6 +194,7 @@ data class Profile(
                     val id = json["plugin"].optString
                     if (!id.isNullOrEmpty()) {
                         plugin = PluginOptions(id, json["plugin_opts"].optString).toString(false)
+                        Log.d("kek", plugin!!)
                     }
                     name = json["remarks"].optString
                     route = json["route"].optString ?: route

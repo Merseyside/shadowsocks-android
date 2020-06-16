@@ -71,14 +71,17 @@ class ServiceNotification(private val service: BaseService.Interface, profileNam
     private var callbackRegistered = false
 
     private val builder = NotificationCompat.Builder(service as Context, channel)
-            .setWhen(0)
-            .setColor(ContextCompat.getColor(service, R.color.material_primary_500))
-            .setTicker(service.getString(R.string.forward_success))
-            .setContentTitle(profileName)
-            .setContentIntent(Core.configureIntent(service))
-            .setSmallIcon(R.drawable.ic_service_active)
-            .setCategory(NotificationCompat.CATEGORY_SERVICE)
-            .setPriority(if (visible) NotificationCompat.PRIORITY_LOW else NotificationCompat.PRIORITY_MIN)
+        .setWhen(0)
+        .setColor(ContextCompat.getColor(service, R.color.material_primary_500))
+        .setTicker(service.getString(R.string.forward_success))
+        .setContentTitle(profileName)
+        .setSmallIcon(R.drawable.ic_service_active)
+        .setCategory(NotificationCompat.CATEGORY_SERVICE)
+        .setPriority(if (visible) NotificationCompat.PRIORITY_LOW else NotificationCompat.PRIORITY_MIN)
+        .apply {
+
+            setContentIntent(Core.getConfigureIntent(service))
+        }
 
     init {
         service as Context

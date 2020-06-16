@@ -32,20 +32,20 @@ import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 object RemoteConfig {
-    private val config = GlobalScope.async(Dispatchers.Main.immediate) {
-        Firebase.remoteConfig.apply { setDefaultsAsync(R.xml.default_configs).await() }
-    }
-
-    fun fetchAsync() = GlobalScope.async(Dispatchers.Main.immediate) { fetch() }
-
-    suspend fun fetch() = config.await().run {
-        try {
-            fetch().await()
-            this to true
-        } catch (e: Exception) {
-            Timber.d(e)
-            Firebase.analytics.logEvent("femote_config_failure") { param("message", e.toString()) }
-            this to false
-        }
-    }
+//    private val config = GlobalScope.async(Dispatchers.Main.immediate) {
+//        Firebase.remoteConfig.apply { setDefaultsAsync(R.xml.default_configs).await() }
+//    }
+//
+//    fun fetchAsync() = GlobalScope.async(Dispatchers.Main.immediate) { fetch() }
+//
+//    suspend fun fetch() = config.await().run {
+//        try {
+//            fetch().await()
+//            this to true
+//        } catch (e: Exception) {
+//            Timber.d(e)
+//            Firebase.analytics.logEvent("femote_config_failure") { param("message", e.toString()) }
+//            this to false
+//        }
+//    }
 }

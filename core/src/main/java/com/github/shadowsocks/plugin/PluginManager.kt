@@ -33,6 +33,7 @@ import android.net.Uri
 import android.os.Build
 import android.system.Os
 import android.util.Base64
+import android.util.Log
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import com.github.shadowsocks.Core
@@ -126,6 +127,7 @@ object PluginManager {
 
         try {
             val result = initNative(configuration)
+            Log.d(TAG, result.toString())
             if (result != null) return result
         } catch (t: Throwable) {
             if (throwable == null) throwable = t else Timber.w(t)
@@ -136,6 +138,17 @@ object PluginManager {
         throw throwable ?: PluginNotFoundException(configuration.selected)
     }
 
+    fun isV2RayEnabled(): Boolean {
+        val plugins = fetchPlugins()
+
+        plugins.lookup.forEach { pair ->
+            if (pair.key.toLowerCase() == "v2ray") return true
+        }
+
+        return false
+    }
+
+    private val TAG = "PluginManager"
     private fun initNative(configuration: PluginConfiguration): Pair<String, PluginOptions>? {
         var flags = PackageManager.GET_META_DATA
         if (Build.VERSION.SDK_INT >= 24) {
@@ -143,7 +156,10 @@ object PluginManager {
         }
         val providers = app.packageManager.queryIntentContentProviders(
                 Intent(PluginContract.ACTION_NATIVE_PLUGIN, buildUri(configuration.selected)), flags)
-        if (providers.isEmpty()) return null
+
+        if (providers.isEmpty()) {
+            return null
+        }
         if (providers.size > 1) {
             val message = "Conflicting plugins found from: ${providers.joinToString { it.providerInfo.packageName }}"
             Toast.makeText(app, message, Toast.LENGTH_LONG).show()
